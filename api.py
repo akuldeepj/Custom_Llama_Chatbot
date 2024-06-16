@@ -1,3 +1,4 @@
+from flask import Flask, request, jsonify
 from langchain_community.document_loaders import PyPDFLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import OllamaEmbeddings
@@ -6,6 +7,10 @@ from langchain_community.llms import Ollama
 from langchain_core.prompts import ChatPromptTemplate
 from langchain.chains.combine_documents import create_stuff_documents_chain
 from langchain.chains import create_retrieval_chain
+
+app = Flask(__name__)
+
+retrieval_chain = None
 
 def load_and_split_documents(pdf_path):
     loader = PyPDFLoader(pdf_path)
@@ -27,6 +32,7 @@ def create_retrieval_chain_with_ollama(db):
     Think step by step before providing a detailed answer. 
     Give the answer precisely without missing any important details.
     Act like you are directly answering the user's question without mentioning words like "Based on the context".
+    when clubs is reffered treat it as student clubs and give all the details about it.
     <context>
     {context}
     </context>
@@ -36,20 +42,28 @@ def create_retrieval_chain_with_ollama(db):
     retrieval_chain = create_retrieval_chain(retriever, document_chain)
     return retrieval_chain
 
-def chat_with_langchain(pdf_path):
-    documents = load_and_split_documents(pdf_path)
+@app.route('/init', methods=['POST'])
+def initialize():
+    global retrieval_chain
+    pdf_path = request.json.get('pdf_path')
+    # documents = load_and_split_documents(pdf_path)
+    documents = load_and_split_documents("Chatbot.pdf")
     db = create_faiss_db(documents)
     retrieval_chain = create_retrieval_chain_with_ollama(db)
+    return jsonify({"message": "Chatbot initialized with PDF"})
 
-    while True:
-        user_input = input("You: ")
-        if user_input.lower() == "bye":
-            print("Chatbot: Goodbye!")
-            break
-
-        response = retrieval_chain.invoke({"input": user_input})
-        print(f"Chatbot: {response['answer']}")
+@app.route('/chat', methods=['POST'])
+def chat():
+    global retrieval_chain
+    if retrieval_chain is None:
+        return jsonify({"error": "Chatbot not initialized. Please upload a PDF first."})
+    
+    user_input = request.json.get('input')
+    if user_input.lower() == "bye":
+        return jsonify({"response": "Goodbye!"})
+    
+    response = retrieval_chain.invoke({"input": user_input})
+    return jsonify({"response": response['answer']})
 
 if __name__ == "__main__":
-    pdf_path = "Chatbot.pdf"
-    chat_with_langchain(pdf_path)
+    app.run(debug=True)
