@@ -1,6 +1,4 @@
-Sure, here is the `README.md` file for your project:
 
-```markdown
 # Chatbot with LangChain
 
 This project demonstrates how to create a chatbot using LangChain. The chatbot is capable of loading and processing documents from a PDF file, creating a FAISS database for efficient retrieval, and interacting with users using an LLM (Large Language Model). The chatbot can handle greetings, goodbyes, and small talk, and answer questions based on the provided context from the PDF.
@@ -21,8 +19,8 @@ This project demonstrates how to create a chatbot using LangChain. The chatbot i
 1. Clone the repository:
 
    ```sh
-   git clone https://github.com/your-repo/chatbot-with-langchain.git
-   cd chatbot-with-langchain
+   git clone https://github.com/akuldeepj/Custom_Llama_Chatbot/
+   cd Custom_Llama_Chatbot
    ```
 
 2. Create a virtual environment and activate it:
@@ -45,7 +43,7 @@ This project demonstrates how to create a chatbot using LangChain. The chatbot i
 2. Run the chatbot script:
 
    ```sh
-   python chatbot.py
+   python Script_chat.py
    ```
 
 3. Interact with the chatbot through the command line. Type your questions and the chatbot will provide answers based on the content of the PDF. Type "bye" to exit the chat.
