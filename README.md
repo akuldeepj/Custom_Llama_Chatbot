@@ -33,7 +33,7 @@ This project demonstrates how to create a chatbot using LangChain. The chatbot i
 3. Install the required packages:
 
    ```sh
-   pip install langchain_community langchain_core langchain_chains PyPDFLoader FAISS Ollama
+   pip install -r requirements.txt
    ```
 
 ## Usage
