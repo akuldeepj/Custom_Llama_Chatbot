@@ -27,6 +27,7 @@ def create_retrieval_chain_with_ollama(db):
     Think step by step before providing a detailed answer. 
     Give the answer precisely without missing any important details.
     Act like you are directly answering the user's question without mentioning words like "Based on the context".
+    when clubs is reffered treat it as student clubs and give all the details about it.
     <context>
     {context}
     </context>
